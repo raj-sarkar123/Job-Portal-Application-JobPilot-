@@ -1,16 +1,129 @@
-# React + Vite
+# 🚀 JobPilot – Job Portal Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+JobPilot is a modern **full-stack job portal** built to connect **job seekers** and **recruiters** through a clean, role-based hiring experience.  
+It supports job discovery, applications tracking, and recruiter job management with secure authentication.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+### 👤 Candidate
+- Browse and search jobs
+- Apply to jobs
+- Track application status
+- Save jobs for later
+- Role-based dashboard access
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🧑‍💼 Recruiter
+- Post new jobs
+- Manage job listings
+- View candidate applications
+- Secure recruiter-only routes
 
-## Expanding the ESLint configuration
+### 🔐 Authentication & Roles
+- Clerk authentication
+- Role-based access control (Candidate / Recruiter)
+- Protected routes and actions
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React (Vite)**
+- **Tailwind CSS**
+- **ShadCN UI**
+- **Framer Motion**
+- **Lucide Icons**
+
+### Backend / Services
+- **Supabase** (Database + Storage)
+- **Clerk** (Authentication & User Management)
+
+### Tooling
+- Git & GitHub
+- ESLint
+- Vite
+
+---
+
+## 📂 Project Structure
+
+```bash
+jobPortal/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── utils/
+│   ├── data/
+│   ├── App.jsx
+│   └── main.jsx
+├── public/
+├── .env
+├── .gitignore
+├── package.json
+└── README.md
+Create a .env file in the root directory:
+
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+Clone the repository
+git clone https://github.com/raj-sarkar123/Job-Portal-Application-JobPilot.git
+cd jobPortal
+
+npm install
+npm run dev
+http://localhost:5173
+🔒 Role-Based Access Logic
+
+Recruiters can access job posting routes
+
+Candidates can apply and track applications
+
+UI and CTA buttons change dynamically based on role
+
+📸 Screenshots
+
+(Add screenshots here for better presentation)
+
+🚀 Future Enhancements
+
+Resume upload & parsing
+
+Application status updates
+
+Job recommendations (AI-based)
+
+Admin dashboard
+
+Notifications & email alerts
+
+👨‍💻 Author
+
+Raj Sarkar
+B.Tech Student | MERN Stack Developer
+
+🔗 GitHub: https://github.com/raj-sarkar123
+
+⭐ If you like this project
+
+Give it a star ⭐ and feel free to fork!
+
+
+---
+
+## ✅ Why this README is strong
+- Recruiter-friendly
+- Clear feature separation
+- Clean tech stack mention
+- Secure env handling
+- Looks like a **real product**, not a college demo
+
+If you want next, I can:
+- customize it for **resume projects**
+- shorten it for **hackathon**
+- add **badges & screenshots**
+- rewrite it in **ATS-friendly format**
+
+Just say 💪
