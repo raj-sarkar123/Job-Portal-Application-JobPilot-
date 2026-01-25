@@ -25,9 +25,9 @@ const router = createBrowserRouter([
   { 
         path:'/onboarding',
         element:
-        <ProtectedRoute>
+       
         <Onboarding/>
-        </ProtectedRoute>
+      
 
      },{ 
         path:'/jobs',
