@@ -1,6 +1,46 @@
 import supabaseClient from "@/utils/supabase";
 
 /* ---------- GET JOBS ---------- */
+// export async function getJobs(
+//   token,
+//   { location, company_id, searchQuery } = {}
+// ) {
+//   const supabase = supabaseClient(token);
+
+//   let query = supabase
+//     .from("jobs")
+//     .select(`
+//       *,
+//       company:companies!inner (
+//         name,
+//         logo
+//       ),
+//       saved:saved_jobs!left (
+//         id
+//       )
+//     `);
+
+//   if (searchQuery?.trim()) {
+//     query = query.ilike("title", `%${searchQuery}%`);
+//   }
+
+//   if (location?.trim()) {
+//     query = query.ilike("location", `%${location}%`);
+//   }
+
+//   if (company_id?.trim()) {
+//     query = query.ilike("company.name", `%${company_id}%`);
+//   }
+
+//   const { data, error } = await query;
+
+//   if (error) {
+//     console.error("Supabase getJobs error:", error);
+//     throw error;
+//   }
+
+//   return data;
+// }
 export async function getJobs(
   token,
   { location, company_id, searchQuery } = {}
@@ -39,8 +79,10 @@ export async function getJobs(
     throw error;
   }
 
-  return data;
+  return data ?? [];
 }
+
+
 
 
 /* ---------- SAVE / UNSAVE (FIXED SIGNATURE) ---------- */

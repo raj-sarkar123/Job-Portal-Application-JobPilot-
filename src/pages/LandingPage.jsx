@@ -26,7 +26,8 @@ const LandingPage = () => {
 
   if (!isLoaded) return null;
 
-  const userRole = user?.publicMetadata?.role; // "recruiter" | "candidate"
+  const userRole = user?.unsafeMetadata?.role;
+
   const isRecruiter = userRole === "recruiter";
   return (
     <main className="w-full flex flex-col gap-20">
@@ -121,9 +122,9 @@ const LandingPage = () => {
               {/* <h2 className="text-4xl sm:text-6xl font-bold mb-6 leading-tight">
                 Connect with <br /> Global Leaders
               </h2> */}
-              <p className="text-white/80 text-lg sm:text-xl font-light">
+              {/* <p className="text-white/80 text-lg sm:text-xl font-light">
                 Trusted by Fortune 500 companies hiring top-tier talent worldwide.
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

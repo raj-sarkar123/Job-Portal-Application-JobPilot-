@@ -18,9 +18,9 @@ import { neobrutalism, shadesOfPurple } from '@clerk/themes'
   createRoot(document.getElementById('root')).render(
     
       <ClerkProvider 
-      // appearance={{
-      //   baseTheme:neobrutalism,
-      // }}
+      appearance={{
+        baseTheme:shadesOfPurple,
+      }}
       
       publishableKey={PUBLISHABLE_KEY}>
         <App />

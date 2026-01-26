@@ -12,11 +12,13 @@ import {
   X,
 } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
+import {  useAuth } from "@clerk/clerk-react";
+
 
 /* ---------- Cities ---------- */
 const RAW_CITIES = [
   // Pan-India / Metro
-  "Remote",
+ 
   "Bengaluru",
   "Hyderabad",
   "Chennai",
@@ -122,6 +124,8 @@ const useDebounce = (value, delay = 300) => {
 
 const JobListing = () => {
   const { isLoaded, user } = useUser();
+  const { getToken, isSignedIn } = useAuth();
+
 
   // ✅ CORRECT recruiter detection
   const role =
@@ -139,26 +143,49 @@ const JobListing = () => {
 
   const debouncedSearch = useDebounce(searchQuery);
 useEffect(() => {
-  setPage(1);
-}, [location, company_id, debouncedSearch]);
+    setPage(1);
+  }, [location, company_id, debouncedSearch]);
 
+  /* 🔧 FIX: initialize useFetch WITHOUT params */
   const {
     fn: fnJobs,
     data: jobs,
     loading,
     error,
-  } = useFetch(getJobs, {
-    location: isRecruiter ? "" : location,
-    company_id,
-    searchQuery: isRecruiter ? "" : debouncedSearch,
-    recruiter_id: isRecruiter ? user?.id : null,
-  });
+  } = useFetch(getJobs);
 
+  /* 🔧 FIX: pass params ONLY when calling fnJobs */
   useEffect(() => {
-    if (isLoaded) {
-      fnJobs();
+  if (!isLoaded) return;
+
+  const loadJobs = async () => {
+    let token = null;
+
+    if (isSignedIn) {
+      token = await getToken({ template: "supabase" });
     }
-  }, [isLoaded, location, company_id, debouncedSearch]);
+
+    fnJobs(
+      token,
+      {
+        location: isRecruiter ? "" : location,
+        company_id,
+        searchQuery: isRecruiter ? "" : debouncedSearch,
+      }
+    );
+  };
+
+  loadJobs();
+}, [
+  isLoaded,
+  isSignedIn,
+  isRecruiter,
+  location,
+  company_id,
+  debouncedSearch,
+]);
+
+
 
   const filteredCities = INDIAN_CITIES.filter(city =>
     city.toLowerCase().includes(locationSearch.toLowerCase())
@@ -176,12 +203,14 @@ useEffect(() => {
   }, []);
 
   const [page, setPage] = useState(1);
-const totalPages = Math.ceil((jobs?.length || 0) / ITEMS_PER_PAGE);
-const startIndex = (page - 1) * ITEMS_PER_PAGE;
-const currentJobs = jobs?.slice(
-  startIndex,
-  startIndex + ITEMS_PER_PAGE
-);
+  const totalPages = Math.ceil((jobs?.length || 0) / ITEMS_PER_PAGE);
+  const startIndex = (page - 1) * ITEMS_PER_PAGE;
+  const currentJobs = jobs?.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
+
 
   return (
     <section className="min-h-screen w-full bg-[#f8fafc] py-12 sm:py-20">

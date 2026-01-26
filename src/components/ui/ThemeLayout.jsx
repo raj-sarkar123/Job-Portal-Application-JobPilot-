@@ -17,7 +17,7 @@ const ThemeLayout = ({ children }) => {
             radial-gradient(at 0% 0%, hsla(186, 80%, 95%, 1) 0, transparent 50%),
             radial-gradient(at 50% 0%, hsla(186, 80%, 97%, 1) 0, transparent 50%),
             radial-gradient(at 100% 0%, hsla(186, 70%, 96%, 1) 0, transparent 50%);
-          overflow-x: hidden;
+          overflow-x: visible;
         }
 
         /* Fixed overlay — does NOT affect sticky */

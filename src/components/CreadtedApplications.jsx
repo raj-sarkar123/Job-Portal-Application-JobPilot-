@@ -5,7 +5,13 @@ import React, { useEffect, useState, useMemo } from "react";
 import { BarLoader } from "react-spinners";
 import ApplicationCard from "./ApplicationCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Inbox, Briefcase, MapPin, LayoutDashboard } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Inbox,
+  MapPin,
+  LayoutDashboard,
+} from "lucide-react";
 
 const ITEMS_PER_PAGE = 3;
 
@@ -37,14 +43,21 @@ const CreatedApplications = () => {
 
   const totalPages = Math.ceil(applicationsList.length / ITEMS_PER_PAGE);
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
-  const currentApplications = applicationsList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const currentApplications = applicationsList.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case "applied": return "bg-blue-50 text-blue-600 border-blue-100";
-      case "interviewing": return "bg-amber-50 text-amber-600 border-amber-100";
-      case "hired": return "bg-emerald-50 text-emerald-600 border-emerald-100";
-      default: return "bg-slate-50 text-slate-500 border-slate-100";
+      case "applied":
+        return "bg-blue-50 text-blue-600 border-blue-100";
+      case "interviewing":
+        return "bg-amber-50 text-amber-600 border-amber-100";
+      case "hired":
+        return "bg-emerald-50 text-emerald-600 border-emerald-100";
+      default:
+        return "bg-slate-50 text-slate-500 border-slate-100";
     }
   };
 
@@ -71,51 +84,75 @@ const CreatedApplications = () => {
         </p>
       </div>
 
-      {/* --- Shorter Grid Layout --- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-        {currentApplications.map((application) => (
-          <div
-            key={application.id}
-            className="w-full max-w-[380px] bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
-          >
-            {/* Top Header Section: Reduced Padding */}
-            <div className="p-5 pb-3 flex items-start justify-between">
-              <div className="flex gap-3 min-w-0">
-                <div className="h-10 w-10 rounded-xl border border-slate-100 bg-white p-1.5 flex items-center justify-center shrink-0 shadow-sm">
-                  <img
-                    src={application.job?.company?.logo || "/placeholder.png"}
-                    alt="logo"
-                    className="h-full w-full object-contain"
-                  />
+      {/* --- Empty State --- */}
+      {applicationsList.length === 0 && (
+        <div className="flex flex-col items-center justify-center min-h-[350px] text-center">
+          <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 mb-4">
+            <Inbox className="text-indigo-600" size={32} />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800">
+            No applications found
+          </h2>
+          <p className="text-slate-500 text-sm mt-1 max-w-sm">
+            You haven’t applied to any jobs yet.
+          </p>
+        </div>
+      )}
+
+      {/* --- Applications Grid --- */}
+      {applicationsList.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+          {currentApplications.map((application) => (
+            <div
+              key={application.id}
+              className="w-full max-w-[380px] bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
+            >
+              {/* Top Header */}
+              <div className="p-5 pb-3 flex items-start justify-between">
+                <div className="flex gap-3 min-w-0">
+                  <div className="h-10 w-10 rounded-xl border border-slate-100 bg-white p-1.5 flex items-center justify-center shrink-0 shadow-sm">
+                    <img
+                      src={
+                        application.job?.company?.logo || "/placeholder.png"
+                      }
+                      alt="logo"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-bold text-slate-900 truncate leading-none mb-1">
+                      {application.job?.title}
+                    </h3>
+                    <p className="text-[11px] text-indigo-600 font-bold truncate">
+                      {application.job?.company?.name}
+                    </p>
+                    <div className="flex items-center gap-1 text-[9px] text-slate-400 mt-0.5 uppercase font-bold tracking-wider">
+                      <MapPin size={9} />
+                      {application.job?.location || "Remote"}
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 truncate leading-none mb-1">
-                    {application.job?.title}
-                  </h3>
-                  <p className="text-[11px] text-indigo-600 font-bold truncate">
-                    {application.job?.company?.name}
-                  </p>
-                  <div className="flex items-center gap-1 text-[9px] text-slate-400 mt-0.5 uppercase font-bold tracking-wider">
-                    <MapPin size={9} /> {application.job?.location || "Remote"}
+                <span
+                  className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-full border ${getStatusColor(
+                    application.status
+                  )}`}
+                >
+                  {application.status}
+                </span>
+              </div>
+
+              {/* Application Details */}
+              <div className="px-4 pb-4 flex-grow">
+                <div className="h-full p-1.5 bg-slate-50/40 rounded-[1.5rem] border border-slate-50">
+                  <div className="scale-[0.98] origin-top">
+                    <ApplicationCard application={application} isCandidate />
                   </div>
                 </div>
               </div>
-              <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-full border ${getStatusColor(application.status)}`}>
-                {application.status}
-              </span>
             </div>
-
-            {/* Application Details Area: Tightened vertical space */}
-            <div className="px-4 pb-4 flex-grow">
-              <div className="h-full p-1.5 bg-slate-50/40 rounded-[1.5rem] border border-slate-50">
-                <div className="scale-[0.98] origin-top">
-                  <ApplicationCard application={application} isCandidate />
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* --- Pagination --- */}
       {totalPages > 1 && (
