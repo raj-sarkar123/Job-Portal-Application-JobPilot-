@@ -63,7 +63,7 @@ const LandingPage = () => {
                 </Button>
               </Link>
 
-             <Link to={userRole === "recruiter" ? "/post-job" : "/applications"}>
+             <Link to={userRole === "recruiter" ? "/post-job" : "/my-jobs"}>
   <Button
     size="xl"
     variant="outline"
