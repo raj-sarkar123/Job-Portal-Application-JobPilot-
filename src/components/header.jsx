@@ -8,7 +8,7 @@ import {
   UserButton,
   useUser,
 } from "@clerk/clerk-react";
-import { BriefcaseBusiness, PenBox, Save, ChevronDown } from "lucide-react";
+import { BriefcaseBusiness, PenBox, Save } from "lucide-react";
 
 const Header = () => {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -32,20 +32,56 @@ const Header = () => {
     setSearchParams(newParams);
   };
 
-  const openUserMenu = () => {
-    document.querySelector(".cl-userButtonTrigger")?.click();
-  };
+  // Reusable User Profile Component to avoid duplication
+  const UserProfile = () => (
+    <div className="flex items-center gap-2 p-1 pr-3 rounded-2xl bg-slate-50 border border-slate-200/60 hover:border-[#14a7b8]/30 transition-colors max-w-fit">
+      <div className="shrink-0">
+        <UserButton
+          appearance={{
+            elements: {
+              userButtonPopoverCard: "right-0 left-auto origin-top-right",
+              userButtonTrigger: "focus:ring-0",
+            },
+          }}
+        >
+          <UserButton.MenuItems>
+            <UserButton.Action
+              label={isRecruiter ? "Postings" : "Applications"}
+              labelIcon={<BriefcaseBusiness size={16} className="text-[#14a7b8]" />}
+              onClick={() => navigate("/my-jobs")}
+            />
+            {!isRecruiter && (
+              <UserButton.Action
+                label="Saved Jobs"
+                labelIcon={<Save size={16} className="text-orange-500" />}
+                onClick={() => navigate("/saved-jobs")}
+              />
+            )}
+            <UserButton.Action label="manageAccount" />
+            <UserButton.Action label="signOut" />
+          </UserButton.MenuItems>
+        </UserButton>
+      </div>
+
+      <div className="flex flex-col ml-1 min-w-0">
+        <span className="text-[12px] sm:text-[13px] font-bold text-slate-800 truncate">
+          {user?.firstName}
+        </span>
+        <span className="text-[9px] sm:text-[10px] font-bold text-[#14a7b8] uppercase tracking-wider">
+          {role || "Member"}
+        </span>
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <header className="top-0 z-100 w-full">
-        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#14a7b8]/50 to-transparent" />
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#14a7b8]/50 to-transparent" />
 
-        {/* MOBILE: stacked | DESKTOP: row */}
-        <nav className="mx-auto max-w-8xl px-4 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          {/* TOP ROW (mobile): brand left, actions right */}
+    <nav className="mx-auto max-w-8xl px-4 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          {/* TOP ROW */}
           <div className="flex items-center justify-between w-full md:w-auto">
-            {/* BRAND */}
             <Link to="/" className="flex items-center gap-2.5 group">
               <div className="relative">
                 <div className="absolute -inset-1 bg-[#14a7b8] rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
@@ -60,7 +96,7 @@ const Header = () => {
               </span>
             </Link>
 
-            {/* MOBILE RIGHT ACTIONS */}
+            {/* MOBILE ONLY ACTIONS */}
             <SignedIn>
               <div className="flex items-center gap-2 md:hidden">
                 {isRecruiter && (
@@ -70,12 +106,24 @@ const Header = () => {
                     </Button>
                   </Link>
                 )}
-                <UserButton />
+                {/* NOW SHOWING FULL PROFILE ON MOBILE */}
+                <UserProfile />
               </div>
             </SignedIn>
+            
+            <SignedOut>
+               <div className="md:hidden">
+                  <Button
+                    className="rounded-xl bg-slate-900 text-white px-5 h-10 text-xs font-bold"
+                    onClick={() => setShowSignIn(true)}
+                  >
+                    Sign In
+                  </Button>
+               </div>
+            </SignedOut>
           </div>
 
-          {/* CENTER NAV — centered on mobile */}
+          {/* CENTER NAV */}
           <div className="w-full flex justify-center md:flex-1 md:justify-center">
             <div className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl border border-slate-200/50">
               {[
@@ -90,8 +138,7 @@ const Header = () => {
                   key={link.path}
                   to={link.path}
                   className={({ isActive }) =>
-                    `px-3 py-1.5 md:px-5 md:py-2
-                    text-xs md:text-sm font-bold rounded-xl transition-all duration-300 ${
+                    `px-3 py-1.5 md:px-5 md:py-2 text-xs md:text-sm font-bold rounded-xl transition-all duration-300 ${
                       isActive
                         ? "bg-white text-[#14a7b8] shadow-sm ring-1 ring-slate-200"
                         : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
@@ -104,7 +151,7 @@ const Header = () => {
             </div>
           </div>
 
-          {/* DESKTOP RIGHT ACTIONS */}
+          {/* DESKTOP ONLY ACTIONS */}
           <div className="hidden md:flex items-center gap-4">
             <SignedOut>
               <Button
@@ -124,57 +171,7 @@ const Header = () => {
                   </Button>
                 </Link>
               )}
-
-              <div className="flex items-center gap-2 p-1 pr-3 rounded-2xl bg-slate-50 border border-slate-200/60 hover:border-[#14a7b8]/30 transition-colors">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonPopoverCard:
-                        "right-0 left-auto origin-top-right",
-                      userButtonTrigger: "focus:ring-0",
-                    },
-                  }}
-                >
-                  <UserButton.MenuItems>
-                    <UserButton.Action
-                      label={isRecruiter ? "Postings" : "Applications"}
-                      labelIcon={
-                        <BriefcaseBusiness
-                          size={16}
-                          className="text-[#14a7b8]"
-                        />
-                      }
-                      onClick={() => navigate("/my-jobs")}
-                    />
-                    {!isRecruiter && (
-                      <UserButton.Action
-                        label="Saved Jobs"
-                        labelIcon={
-                          <Save size={16} className="text-orange-500" />
-                        }
-                        onClick={() => navigate("/saved-jobs")}
-                      />
-                    )}
-                    <UserButton.Action label="manageAccount" />
-                    <UserButton.Action label="signOut" />
-                  </UserButton.MenuItems>
-                </UserButton>
-
-                {/* This is now just DISPLAY, not a trigger */}
-                <div
-                  className="hidden sm:flex flex-col ml-1"
-                 
-                >
-                  <span className="text-[13px] font-bold text-slate-800">
-                    {user?.firstName}
-                  </span>
-                  <span className="text-[10px] font-bold text-[#14a7b8] uppercase">
-                    {role || "Member"}
-                  </span>
-                </div>
-
-                {/* <ChevronDown size={14} className="text-slate-400" /> */}
-              </div>
+              <UserProfile />
             </SignedIn>
           </div>
         </nav>

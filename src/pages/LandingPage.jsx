@@ -13,40 +13,55 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "../components/ui/accordion";
-import { Briefcase, UserPlus, Search, TrendingUp, Globe, Play } from "lucide-react";
+import { Briefcase, UserPlus, Search, TrendingUp, Globe, Play, Sparkles, Zap, ShieldCheck } from "lucide-react";
 import AutoPlay from "embla-carousel-autoplay";
 
 import companies from "../data/companies.json";
 import faqs from "../data/faq.json";
 import { useUser } from "@clerk/clerk-react";
+import { motion } from "framer-motion";
+import { ArrowRight} from "lucide-react";
 
 
 const LandingPage = () => {
- const { user, isLoaded } = useUser();
+  const { user, isLoaded } = useUser();
 
   if (!isLoaded) return null;
 
   const userRole = user?.unsafeMetadata?.role;
-
-  const isRecruiter = userRole === "recruiter";
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+  }),
+};
   return (
-    <main className="w-full flex flex-col gap-20">
+    <main className="w-full flex flex-col gap-20 overflow-x-hidden">
       
       {/* ================= HERO SECTION ================= */}
-      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center px-8 sm:px-16 min-h-[85vh] gap-12">
+      <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden bg-[url('/grid.svg')] bg-center">
+        {/* Background Blobs */}
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center px-8 sm:px-16 min-h-[90vh] gap-12 relative">
           
           {/* LEFT CONTENT */}
           <div className="flex flex-col justify-center z-10 py-12 lg:py-0">
-            <div className="flex items-center gap-2 mb-6">
-             
-             
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 mb-6 w-fit">
+              <Sparkles size={14} className="text-[#14a7b8]" />
+              <span className="text-xs font-bold text-[#14a7b8] uppercase tracking-wider">The Future of Hiring is here</span>
             </div>
 
             <h1 className="font-extrabold tracking-tight text-5xl sm:text-7xl lg:text-7xl leading-[1.1] text-gray-900">
-              Build your <span className="text-[#14a7b8]">dream career</span>
-             
-             
+              Build your <span className="relative inline-block">
+                dream career
+                <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 358 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 5.26C72.3333 2.26 215 -1.24 357 6.76" stroke="#14a7b8" strokeWidth="3" strokeLinecap="round"/>
+                </svg>
+              </span>
             </h1>
 
             <p className="mt-8 text-gray-500 text-lg sm:text-xl max-w-lg leading-relaxed">
@@ -54,59 +69,101 @@ const LandingPage = () => {
               Smart hiring meets modern talent in a workspace where diversity thrives.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mt-10">
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
               <Link to="/jobs">
                 <Button
                   size="xl"
-                  className="bg-[#14a7b8] hover:bg-[#118a99] px-7 py-5 text-xl rounded-2xl shadow-2xl shadow-teal-100 cursor-pointer transition-transform hover:scale-105"
+                  className="bg-[#14a7b8] hover:bg-[#118a99] px-7 py-5 text-xl rounded-2xl shadow-2xl shadow-teal-200 cursor-pointer transition-transform hover:scale-105"
                 >
                   Explore Jobs
                 </Button>
               </Link>
 
-             <Link to={userRole === "recruiter" ? "/post-job" : "/my-jobs"}>
-  <Button
-    size="xl"
-    variant="outline"
-    className="px-7 py-5 text-xl rounded-2xl border-2 border-[#14a7b8] text-[#14a7b8] hover:bg-teal-50 cursor-pointer transition-all"
-  >
-    {userRole === "recruiter" ? "Post a Job" : "Track Applications"}
-  </Button>
-</Link>
-
+              <Link to={userRole === "recruiter" ? "/post-job" : "/my-jobs"}>
+                <Button
+                  size="xl"
+                  variant="outline"
+                  className="px-7 py-5 text-xl rounded-2xl border-2 border-[#14a7b8] text-[#14a7b8] hover:bg-teal-50 cursor-pointer transition-all"
+                >
+                  {userRole === "recruiter" ? "Post a Job" : "Track Applications"}
+                </Button>
+              </Link>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="mt-12 flex items-center gap-8 border-t border-slate-100 pt-8">
+               <div>
+                  <p className="text-2xl font-bold text-slate-900">12k+</p>
+                  <p className="text-sm text-slate-500">Active Jobs</p>
+               </div>
+               <div className="h-8 w-[1px] bg-slate-200" />
+               <div>
+                  <p className="text-2xl font-bold text-slate-900">500+</p>
+                  <p className="text-sm text-slate-500">Companies</p>
+               </div>
             </div>
           </div>
 
-          {/* RIGHT IMAGE */}
-          <div 
-            className="relative h-[500px] lg:h-full w-full bg-no-repeat bg-contain transition-all duration-700"
-            style={{ 
-              backgroundImage: "url('/background.png')",
-              backgroundPosition: "center right",
-            }}
-          >
-            {/* Subtle glow behind the image subject */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-100/50 blur-[120px] -z-10" />
+          {/* RIGHT IMAGE AREA */}
+          <div className="relative group">
+            <div className="relative z-10 w-full h-[500px] lg:h-[600px] bg-no-repeat bg-contain bg-right"
+                 style={{ backgroundImage: "url('/background.png')" }}>
+            </div>
+            
+            {/* Floating UI Elements (Unique Additions) */}
+            <div className="absolute top-20 left-0 bg-white p-4 rounded-2xl shadow-2xl animate-bounce-slow z-20 hidden sm:flex items-center gap-3">
+               <div className="bg-green-100 p-2 rounded-lg text-green-600"><ShieldCheck size={20}/></div>
+               <div>
+                  <p className="text-xs font-bold">Verified Employer</p>
+                  <p className="text-[10px] text-slate-400">Google Inc.</p>
+               </div>
+            </div>
+
+            <div className="absolute bottom-40 right-10 bg-white p-4 rounded-2xl shadow-2xl animate-pulse z-20 hidden sm:flex items-center gap-3">
+               <div className="bg-orange-100 p-2 rounded-lg text-orange-600"><Zap size={20}/></div>
+               <p className="text-xs font-bold">Fast Response Rate</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ================= COMPANY CAROUSEL ================= */}
-      <section className="w-full max-w-7xl mx-auto px-4">
-        <Carousel plugins={[AutoPlay({ delay: 2200 })]}>
-          <CarouselContent className="flex items-center gap-12">
-            {companies.map(({ id, name, path }) => (
-              <CarouselItem key={id} className="basis-1/3 sm:basis-1/6 flex justify-center">
-                <img
-                  src={path}
-                  alt={name}
-                  className="h-10 sm:h-12  transition-opacity "
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-      </section>
+     <section className="w-full max-w-7xl mx-auto px-4 py-10">
+  {/* Added a subtle label to give the section context */}
+  <p className="text-center text-slate-400 text-sm font-semibold uppercase tracking-[0.2em] mb-10">
+    Trusted by Industry Leaders
+  </p>
+
+  {/* Added a mask-image container to create a smooth fade effect on the sides */}
+  <div className="relative w-full [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+    <Carousel
+      plugins={[
+        AutoPlay({
+          delay: 2200,
+        }),
+      ]}
+      className="w-full"
+    >
+      <CarouselContent className="flex items-center">
+        {companies.map(({ id, name, path }) => (
+          <CarouselItem
+            key={id}
+            className="basis-1/3 md:basis-1/4 lg:basis-1/6 flex justify-center px-4"
+          >
+            <div className="group relative flex items-center justify-center w-full h-16">
+              <img
+                src={path}
+                alt={name}
+                className="h-8 sm:h-10 w-auto object-contain transition-all duration-500 
+                           "
+              />
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
+  </div>
+</section>
 
       {/* ================= BANNER ================= */}
       <section className="w-full max-w-7xl mx-auto px-4">
@@ -131,31 +188,80 @@ const LandingPage = () => {
       </section>
 
       {/* ================= ROLE CARDS ================= */}
-      <section className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
-        <Card className="rounded-[32px] bg-gradient-to-br from-[#e8fbfd] to-white shadow-xl hover:-translate-y-2 transition-all duration-300 border-none p-4">
-          <CardHeader className="flex flex-row gap-5 items-center">
-            <div className="p-5 bg-[#14a7b8] text-white rounded-2xl shadow-lg shadow-teal-100">
+      <section className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-10 w-full relative">
+      {/* Decorative background element */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial from-[#14a7b8]/5 to-transparent -z-10 blur-3xl" />
+
+      {/* Card 1: Job Seekers */}
+      <motion.div
+        custom={0}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={cardVariants}
+        className="group"
+      >
+        <Card className="relative overflow-hidden rounded-[32px] bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 hover:shadow-[#14a7b8]/20 transition-all duration-500 p-6 h-full">
+          {/* Subtle gradient overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#14a7b8]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
+          <CardHeader className="flex flex-row gap-6 items-center relative z-10">
+            <div className="p-5 bg-[#14a7b8] text-white rounded-[24px] shadow-xl shadow-teal-200 group-hover:rotate-6 transition-transform duration-300">
               <Briefcase size={32} />
             </div>
-            <CardTitle className="text-3xl font-bold">For Job Seekers</CardTitle>
+            <div>
+              <CardTitle className="text-3xl font-bold text-slate-900">For Job Seekers</CardTitle>
+              <div className="h-1 w-12 bg-[#14a7b8] mt-2 rounded-full transform origin-left group-hover:scale-x-150 transition-transform duration-500" />
+            </div>
           </CardHeader>
-          <CardContent className="text-gray-500 text-lg leading-relaxed">
-            Apply smarter, track applications in real-time, and get discovered by world-class recruiters.
+
+          <CardContent className="mt-4 relative z-10">
+            <p className="text-slate-500 text-lg leading-relaxed">
+              Apply smarter, track applications in real-time, and get discovered by world-class recruiters.
+            </p>
+            <div className="mt-8 flex items-center gap-2 text-[#14a7b8] font-bold group-hover:gap-4 transition-all duration-300">
+              <span>Find your next role</span>
+              <ArrowRight size={20} />
+            </div>
           </CardContent>
         </Card>
+      </motion.div>
 
-        <Card className="rounded-[32px] bg-gradient-to-br from-[#eef2ff] to-white shadow-xl hover:-translate-y-2 transition-all duration-300 border-none p-4">
-          <CardHeader className="flex flex-row gap-5 items-center">
-            <div className="p-5 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
+      {/* Card 2: Employers */}
+      <motion.div
+        custom={1}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={cardVariants}
+        className="group"
+      >
+        <Card className="relative overflow-hidden rounded-[32px] bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 hover:shadow-indigo-200/50 transition-all duration-500 p-6 h-full">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <CardHeader className="flex flex-row gap-6 items-center relative z-10">
+            <div className="p-5 bg-indigo-600 text-white rounded-[24px] shadow-xl shadow-indigo-100 group-hover:-rotate-6 transition-transform duration-300">
               <UserPlus size={32} />
             </div>
-            <CardTitle className="text-3xl font-bold">For Employers</CardTitle>
+            <div>
+              <CardTitle className="text-3xl font-bold text-slate-900">For Employers</CardTitle>
+              <div className="h-1 w-12 bg-indigo-600 mt-2 rounded-full transform origin-left group-hover:scale-x-150 transition-transform duration-500" />
+            </div>
           </CardHeader>
-          <CardContent className="text-gray-500 text-lg leading-relaxed">
-            Hire faster with curated candidates and a streamlined, automated recruitment flow.
+
+          <CardContent className="mt-4 relative z-10">
+            <p className="text-slate-500 text-lg leading-relaxed">
+              Hire faster with curated candidates and a streamlined, automated recruitment flow.
+            </p>
+            <div className="mt-8 flex items-center gap-2 text-indigo-600 font-bold group-hover:gap-4 transition-all duration-300">
+              <span>Post a position</span>
+              <ArrowRight size={20} />
+            </div>
           </CardContent>
         </Card>
-      </section>
+      </motion.div>
+    </section>
+
 
       {/* ================= HOW IT WORKS ================= */}
       <section className="max-w-7xl mx-auto px-4 w-full">
