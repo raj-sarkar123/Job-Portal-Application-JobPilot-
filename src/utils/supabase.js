@@ -34,6 +34,32 @@ export default supabaseClient;
 // export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 // const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// const supabaseClient = (accessToken) => {
+//   return createClient(supabaseUrl, supabaseAnonKey, {
+//     auth: {
+//       persistSession: false,
+//       autoRefreshToken: false,
+//       detectSessionInUrl: false,
+//     },
+//     global: {
+//       headers: accessToken
+//         ? { Authorization: `Bearer ${accessToken}` }
+//         : {},
+//     },
+//   });
+// };
+
+// export default supabaseClient;
+
+
+
+
+
+// import { createClient } from "@supabase/supabase-js";
+
+// export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 // // 🔒 cache clients by token (and survive HMR)
 // if (!globalThis.__supabaseClients) {
 //   globalThis.__supabaseClients = {};

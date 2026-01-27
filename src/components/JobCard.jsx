@@ -8,39 +8,41 @@ import {
   ExternalLink,
   Loader2,
   Clock,
-  Users,
 } from "lucide-react";
 import { saveJob, unsaveJob } from "@/api/apiJobs";
 import useFetch from "@/hooks/use-fetch";
 
 const JobCard = ({
   job,
-  isMyJob = false,
+  isOwner = false,      // recruiter owns this job
+  isRecruiter = false,  // user role
   savedInit = false,
   onJobSaved,
 }) => {
   const navigate = useNavigate();
 
+  /* ---------------- Permissions ---------------- */
+  const canSave = !isRecruiter;
+
   /* ---------------- Saved State ---------------- */
-  // const [saved, setSaved] = useState(savedInit);
-
   const [saved, setSaved] = useState(
-  savedInit || job?.saved?.length > 0
-);
+    canSave && (savedInit || job?.saved?.length > 0)
+  );
 
-  // 🔥 SYNC with parent updates (THIS WAS MISSING)
-useEffect(() => {
-  setSaved(savedInit || job?.saved?.length > 0);
-}, [savedInit, job?.saved]);
+  useEffect(() => {
+    if (!canSave) return;
+    setSaved(savedInit || job?.saved?.length > 0);
+  }, [savedInit, job?.saved, canSave]);
 
-
+  /* ---------------- API Hooks ---------------- */
   const { fn: save, loading: saving } = useFetch(saveJob);
   const { fn: unsave, loading: unsaving } = useFetch(unsaveJob);
 
   const isSavingOrUnsaving = saving || unsaving;
 
+  /* ---------------- Handlers ---------------- */
   const handleToggleSave = async () => {
-    if (isSavingOrUnsaving) return;
+    if (!canSave || isSavingOrUnsaving) return;
 
     const prev = saved;
     setSaved(!prev);
@@ -48,16 +50,17 @@ useEffect(() => {
     try {
       if (prev) {
         await unsave(job.id);
-        onJobSaved?.(); // refresh saved list
+        onJobSaved?.();
       } else {
         await save(job.id);
       }
     } catch (err) {
       console.error("Save toggle failed:", err);
-      setSaved(prev); // rollback
+      setSaved(prev);
     }
   };
-const applications = job?.applications || [];
+
+  /* ---------------- UI ---------------- */
   return (
     <Card className="group relative overflow-hidden rounded-3xl border border-slate-200/60 bg-white/70 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-200/50">
       {/* Accent Line */}
@@ -91,7 +94,7 @@ const applications = job?.applications || [];
                 {job.company?.name}
               </p>
 
-              {isMyJob && (
+              {isOwner && (
                 <span className="absolute top-4 right-4 rounded-full bg-emerald-50 px-3 py-0.5 text-xs font-bold text-emerald-600 border border-emerald-100">
                   Your Job
                 </span>
@@ -99,8 +102,8 @@ const applications = job?.applications || [];
             </div>
           </div>
 
-          {/* SAVE BUTTON */}
-          {!isMyJob && (
+          {/* SAVE BUTTON — candidates only */}
+          {canSave && (
             <Button
               size="icon"
               variant="ghost"
@@ -137,13 +140,6 @@ const applications = job?.applications || [];
           <div className="flex items-center gap-1.5 rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold text-[#14a7b8]">
             Full-time
           </div>
-
-          {/* {isMyJob && (
-            <div className="flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
-              <Users size={12} />
-              {job.applications?.length ?? 0} Applicants
-            </div>
-          )} */}
         </div>
 
         <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
@@ -153,7 +149,7 @@ const applications = job?.applications || [];
           <div className="flex items-center gap-1.5">
             <Clock size={12} className="text-slate-400" />
             <span className="text-xs font-medium text-slate-400">
-              {isMyJob ? "Manage posting" : "Recently posted"}
+              {isOwner ? "Manage posting" : "Recently posted"}
             </span>
           </div>
 

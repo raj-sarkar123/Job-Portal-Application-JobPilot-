@@ -52,6 +52,7 @@ export async function getJobs(
     .select(`
       *,
       company:companies!inner (
+        id,
         name,
         logo
       ),
@@ -60,14 +61,17 @@ export async function getJobs(
       )
     `);
 
+  // Job title search
   if (searchQuery?.trim()) {
     query = query.ilike("title", `%${searchQuery}%`);
   }
 
+  // Location search
   if (location?.trim()) {
     query = query.ilike("location", `%${location}%`);
   }
 
+  // 🔥 FIX: company filter (CORRECT)
   if (company_id?.trim()) {
     query = query.ilike("company.name", `%${company_id}%`);
   }
@@ -81,6 +85,7 @@ export async function getJobs(
 
   return data ?? [];
 }
+
 
 
 

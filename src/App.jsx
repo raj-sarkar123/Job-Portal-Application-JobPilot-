@@ -12,6 +12,7 @@ import Savedjob from './pages/Savedjob';
 import Myjob from './pages/Myjob';
 import ThemeLayout from './components/ui/ThemeLayout';
 import ProtectedRoute from './components/ui/ProtectedRoute';
+import AuthRedirect from "@/layouts/AuthRedirect";
 
 
 const router = createBrowserRouter([
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
         </ProtectedRoute>
 
      }
+
 
 
     ]
