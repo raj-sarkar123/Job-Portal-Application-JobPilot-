@@ -110,20 +110,3 @@ B.Tech Student | MERN Stack Developer
 
 Give it a star ⭐ and feel free to fork!
 
-
----
-
-## ✅ Why this README is strong
-- Recruiter-friendly
-- Clear feature separation
-- Clean tech stack mention
-- Secure env handling
-- Looks like a **real product**, not a college demo
-
-If you want next, I can:
-- customize it for **resume projects**
-- shorten it for **hackathon**
-- add **badges & screenshots**
-- rewrite it in **ATS-friendly format**
-
-Just say 💪
