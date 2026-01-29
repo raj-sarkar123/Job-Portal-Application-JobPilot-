@@ -12,7 +12,7 @@ It supports job discovery, applications tracking, and recruiter job management w
 - Apply to jobs
 - Track application status
 - Save jobs for later
-- Role-based dashboard access
+- Role-based dashboard access 
 
 ### 🧑‍💼 Recruiter
 - Post new jobs
